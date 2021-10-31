@@ -25,7 +25,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/FlagshipDev/despiadadosResources">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://imgur.com/7Rs9pvg.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Recursos GTA V - Despiadados Community</h3>
@@ -42,15 +42,6 @@
   </p>
 </div>
 
-
-
-
-<!-- ABOUT THE PROJECT -->
-## Sobre el proyecto
-
-[![Product Name Screen Shot][product-screenshot]](https://despiadados.com)
-
-<p align="right">(<a href="#top">Volver</a>)</p>
 
 
 <!-- GETTING STARTED -->
@@ -88,20 +79,10 @@ Cualquier sistema de control de versiones moderno tiene algún mecanismo para so
 <p align="right">(<a href="#top">Volver</a>)</p>
 
 
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#top">Volver</a>)</p>
-
-
-
 <!-- CONTACT -->
 ## Contacto
 
-Discord Personal - [Flagship - 𝕕𝕖𝕧#1001]
+Discord Personal - [Flagship - 𝕕𝕖𝕧#1001]()
 
 Servidor de Discord - [Discord](https://discord.gg/g2xHYMHyUK) 
 
