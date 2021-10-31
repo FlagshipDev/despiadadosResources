@@ -70,7 +70,9 @@ Es obligatorio tener la apliación GitHub Desktop, aunque si ya tienes conociemi
 <p align="right">(<a href="#top">Volver</a>)</p>
 
 <!-- CONTRIBUTING -->
-## ¿Que es una rama?
+## ¿Que es GitHub y que es una rama?
+
+**Leer documento sobre Github** - [¿Que es GitHub?](https://www.xataka.com/basics/que-github-que-que-le-ofrece-a-desarrolladores)
 
 Cualquier sistema de control de versiones moderno tiene algún mecanismo para soportar el uso de ramas. Cuando hablamos de ramificaciones, significa que tú has tomado la rama principal de desarrollo (master) y a partir de ahí has continuado trabajando sin seguir la rama principal de desarrollo.
 
