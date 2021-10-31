@@ -17,12 +17,7 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
@@ -49,37 +44,11 @@
 
 
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">Sobre el proyecto</a>
-      <ul>
-        <li><a href="#built-with">Creado con</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Introducción</a>
-      <ul>
-        <li><a href="#prerequisites">Requisitos</a></li>
-        <li><a href="#installation">Instalación</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Uso</a></li>
-    <li><a href="#license">Licencia</a></li>
-    <li><a href="#contact">Contacto</a></li>
-  </ol>
-</details>
-
-
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## Sobre el proyecto
 
 [![Product Name Screen Shot][product-screenshot]](https://despiadados.com)
-
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `FlagshipDev`, `despiadadosResources`, `twitter_handle`, `linkedin_username`, `email`, `email_client`, `project_title`, `project_description`
 
 <p align="right">(<a href="#top">Volver</a>)</p>
 
@@ -92,7 +61,7 @@ y un historial de cada cambio por pequeño que sea.
 En Despiadados lo utilizaremos para monitorizar que se ha cambiado en cada actualización, controlando así cualquier nuevo fallo y pudiendo 
 restaurar los cambios en caso de un fallo fatal.
 
-### Requisitos para utilizar el repositorio
+### Requisitos
 
 Es obligatorio tener la apliación GitHub Desktop, aunque si ya tienes conociemientos de Git, puedes utilizar el que más te guste.
 * GitHub Desktop
@@ -100,7 +69,7 @@ Es obligatorio tener la apliación GitHub Desktop, aunque si ya tienes conociemi
   https://desktop.github.com
   ```
 
-### Instrucciones de uso:
+### Instrucciones de uso
 
 1. Clonar el repositorio en tu PC
 2. Crear o usar la rama que te ha asignado FlagshipDev
@@ -157,4 +126,4 @@ Link del proyecto: [https://github.com/FlagshipDev/despiadadosResources](https:/
 [license-url]: https://github.com/FlagshipDev/despiadadosResources/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: https://imgur.com/7Rs9pvg
