@@ -15,4 +15,4 @@ jobs:
         port: 22
         script: |
           cd /root/FiveM/server/txData/PlumeESXLegacy_7C9EBA.base/resources
-          ${{ secrets.SCRIPT}}
+          git pull https://${{secrets.TOKEN}}@github.com/despiadadosResources.git
