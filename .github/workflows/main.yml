@@ -11,7 +11,7 @@ jobs:
       with:
         host: 104.251.211.216
         username: root
-        password: ${{ secrets.PRIVATE_KEY }}
+        password: ${{ secrets.PASSWORD }}
         port: 22
         script: |
           cd /root/FiveM/server/txData/PlumeESXLegacy_7C9EBA.base/resources
