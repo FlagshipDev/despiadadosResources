@@ -23,7 +23,7 @@ jobs:
       - name: SFTP Deploy
         uses: wlixcc/SFTP-Deploy-Action@v1.2.1
         with:
-          username: FlagshipDev
+          username: root
           server: 104.251.211.216
           port: 22 # default is 22
           ssh_private_key: ${{ secrets.DESPIADADOS_VPS }}
