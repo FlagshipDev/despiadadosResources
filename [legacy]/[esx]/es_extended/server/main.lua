@@ -1,4 +1,28 @@
 local NewPlayer, LoadPlayer = -1, -1
+
+Citizen.CreateThread(function()
+	local uptimeMinute, uptimeHour, uptime = 0, 0, ''
+
+	while true do
+		Citizen.Wait(1000 * 60) -- every minute
+		uptimeMinute = uptimeMinute + 1
+
+		if uptimeMinute == 60 then
+			uptimeMinute = 0
+			uptimeHour = uptimeHour + 1
+		end
+
+		uptime = string.format("%02dh %02dm", uptimeHour, uptimeMinute)
+		SetConvarServerInfo('En linea: ', uptime)
+		SetConvarServerInfo('Creado por: ', 'FlagshipDev')
+
+
+		TriggerClientEvent('uptime:tick', -1, uptime)
+		TriggerEvent('uptime:tick', uptime)
+	end
+end)
+
+
 Citizen.CreateThread(function()
 	SetMapName('San Andreas')
 	SetGameType('ESX Legacy')
@@ -595,4 +619,9 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
 			ESX.SavePlayers()
 		end)
 	end
+end)
+
+Citizen.CreateThread(function()
+	Wait(10000)
+	print("^3Flag-ESX^0 Loaded succesfully")
 end)

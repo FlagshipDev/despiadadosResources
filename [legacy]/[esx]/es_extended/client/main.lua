@@ -12,6 +12,25 @@ Citizen.CreateThread(function()
 	end
 end)
 
+Citizen.CreateThread(function ()
+	while true do
+	  local playerPed = PlayerPedId()
+  
+	  if DoesEntityExist(playerPed) then
+		SetPedMaxHealth(playerPed, 200)
+	  end
+	  DisableControlAction(1, 140, true)
+	  if IsPlayerFreeAiming(PlayerId()) then
+		  DisableControlAction(1, 141, true)
+		  DisableControlAction(1, 142, true)
+	  end
+	  if IsPedInAnyPoliceVehicle(playerPed) then
+		DisableControlAction(1, 80, true)
+	  end
+	  Citizen.Wait(0)
+	end
+  end)
+
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	ESX.PlayerLoaded = true
@@ -301,6 +320,48 @@ AddEventHandler('esx:removePickup', function(pickupId)
 	if pickups[pickupId] and pickups[pickupId].obj then
 		ESX.Game.DeleteObject(pickups[pickupId].obj)
 		pickups[pickupId] = nil
+	end
+end)
+
+-- Pickups
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+
+		local playerPed = PlayerPedId()
+		local coords = GetEntityCoords(playerPed)
+		
+		-- if there's no nearby pickups we can wait a bit to save performance
+		if next(pickups) == nil then
+			Citizen.Wait(500)
+		end
+
+		for k,v in pairs(pickups) do
+			local distance = GetDistanceBetweenCoords(coords, v.coords.x, v.coords.y, v.coords.z, true)
+			local closestPlayer, closestDistance = FSX.Game.GetClosestPlayer()
+
+			if distance <= 2.0 then
+				FSX.ShowFloatingHelpNotification("Presiona ~y~E~s~ para recoger ~w~"..v.label.."~s~", vector3(v.coords.x, v.coords.y, v.coords.z + 0.5))
+				--FSX.Game.Utils.DrawText3D({
+				--	x = v.coords.x,
+				--	y = v.coords.y,
+				--	z = v.coords.z + 0.25
+				--}, v.label)
+			end
+
+			if (closestDistance == -1 or closestDistance > 3) and distance <= 1.0 and not v.inRange and IsPedOnFoot(playerPed) and  IsControlJustReleased(0, 38) then
+				local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
+				FSX.Streaming.RequestAnimDict(dict)
+				TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
+				Citizen.Wait(1000)
+				TriggerServerEvent('fsx:onPickup', v.id)
+				PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
+				v.inRange = true
+				--	TriggerServerEvent('fsx:onPickup', v.id)
+			--	PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
+			--	v.inRange = true
+			end
+		end
 	end
 end)
 

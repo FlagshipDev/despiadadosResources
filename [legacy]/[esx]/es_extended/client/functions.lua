@@ -51,18 +51,26 @@ ESX.SetPlayerData = function(key, val)
 end
 
 ESX.ShowNotification = function(msg)
-	SetNotificationTextEntry('STRING')
-	AddTextComponentString(msg)
-	DrawNotification(0,1)
+	if exports.fl_notifications ~= nil then
+        exports.fl_notifications:FlagShowNotification(msg)
+	else
+		SetNotificationTextEntry('STRING')
+		AddTextComponentString(msg)
+		DrawNotification(0,1)
+	end
 end
 
 ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-	if saveToBrief == nil then saveToBrief = true end
-	AddTextEntry('esxAdvancedNotification', msg)
-	BeginTextCommandThefeedPost('esxAdvancedNotification')
-	if hudColorIndex then ThefeedNextPostBackgroundColor(hudColorIndex) end
-	EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
-	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+	if exports.fl_notifications ~= nil then
+        exports.fl_notifications:FlagShowAdvancedNotification(title, subject, msg, icon, iconType, job)
+    else
+		if saveToBrief == nil then saveToBrief = true end
+		AddTextEntry('esxAdvancedNotification', msg)
+		BeginTextCommandThefeedPost('esxAdvancedNotification')
+		if hudColorIndex then ThefeedNextPostBackgroundColor(hudColorIndex) end
+		EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
+		EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+	end
 end
 
 ESX.ShowHelpNotification = function(msg, thisFrame, beep, duration)
@@ -78,11 +86,16 @@ ESX.ShowHelpNotification = function(msg, thisFrame, beep, duration)
 end
 
 ESX.ShowFloatingHelpNotification = function(msg, coords)
-	AddTextEntry('esxFloatingHelpNotification', msg)
+--[[	AddTextEntry('esxFloatingHelpNotification', msg)
 	SetFloatingHelpTextWorldPosition(1, coords)
 	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
 	BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
-	EndTextCommandDisplayHelp(2, false, false, -1)
+	EndTextCommandDisplayHelp(2, false, false, -1)]]--
+	AddTextEntry('esxFloatingHelpNotification', msg)
+    SetFloatingHelpTextWorldPosition(1, coords)
+	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
+	BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
+    EndTextCommandDisplayHelp(2, false, false, -1)
 end
 
 ESX.TriggerServerCallback = function(name, cb, ...)
@@ -521,105 +534,202 @@ ESX.Game.GetVehicleInDirection = function()
 	return nil
 end
 
-ESX.Game.GetVehicleProperties = function(vehicle)
-	if DoesEntityExist(vehicle) then
-		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
-		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
-		local extras = {}
+local color1, color2 = GetVehicleColours(vehicle)
+	local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
+	local extras = {}
+	local condition = {
+		bodyHealth      = GetVehicleBodyHealth(vehicle),
+		engineHealth    = GetVehicleEngineHealth(vehicle),
+		fuelLevel       = GetVehicleFuelLevel(vehicle),
+		petrolTankHealth  = GetVehiclePetrolTankHealth(vehicle),
+		windows = {},
+		tyres = {},
+		doors = {}
+	}
+	local driftKit = 0
 
-		for extraId=0, 12 do
-			if DoesExtraExist(vehicle, extraId) then
-				local state = IsVehicleExtraTurnedOn(vehicle, extraId) == 1
-				extras[tostring(extraId)] = state
+	if DecorExistOn(vehicle, 'DRIFTKIT') and DecorGetInt(vehicle, 'DRIFTKIT') == 1 then
+		driftKit = 1
+	end
+
+	for id=0, 12 do
+		if DoesExtraExist(vehicle, id) then
+			local state = IsVehicleExtraTurnedOn(vehicle, id) == 1
+			extras[tostring(id)] = state
+		end
+	end
+	if(Config.SerializeCarDamage)then
+		local damageCondition = GetExtraCarDamage(vehicle)
+		condition.windows = damageCondition.windows
+		condition.tyres = damageCondition.tyres
+		condition.doors = damageCondition.doors
+		if(DecorExistOn(vehicle,'TOTALKM'))then
+			condition.totalkm = DecorGetFloat(vehicle,'TOTALKM')
+		end
+	end
+	local vehState = {
+
+		model             = GetEntityModel(vehicle),
+
+		plate             = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
+		plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
+
+		health            = GetEntityHealth(vehicle),
+		dirtLevel         = GetVehicleDirtLevel(vehicle),
+
+		color1            = color1,
+		color2            = color2,
+
+		pearlescentColor  = pearlescentColor,
+		wheelColor        = wheelColor,
+
+		wheels            = GetVehicleWheelType(vehicle),
+		windowTint        = GetVehicleWindowTint(vehicle),
+
+		neonEnabled       = {
+			IsVehicleNeonLightEnabled(vehicle, 0),
+			IsVehicleNeonLightEnabled(vehicle, 1),
+			IsVehicleNeonLightEnabled(vehicle, 2),
+			IsVehicleNeonLightEnabled(vehicle, 3)
+		},
+
+		extras            = extras,
+
+		neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
+		tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
+		xenonColor		  = GetVehicleXenonLightsColour(vehicle),
+		modSpoilers       = GetVehicleMod(vehicle, 0),
+		modFrontBumper    = GetVehicleMod(vehicle, 1),
+		modRearBumper     = GetVehicleMod(vehicle, 2),
+		modSideSkirt      = GetVehicleMod(vehicle, 3),
+		modExhaust        = GetVehicleMod(vehicle, 4),
+		modFrame          = GetVehicleMod(vehicle, 5),
+		modGrille         = GetVehicleMod(vehicle, 6),
+		modHood           = GetVehicleMod(vehicle, 7),
+		modFender         = GetVehicleMod(vehicle, 8),
+		modRightFender    = GetVehicleMod(vehicle, 9),
+		modRoof           = GetVehicleMod(vehicle, 10),
+
+		modEngine         = GetVehicleMod(vehicle, 11),
+		modBrakes         = GetVehicleMod(vehicle, 12),
+		modTransmission   = GetVehicleMod(vehicle, 13),
+		modHorns          = GetVehicleMod(vehicle, 14),
+		modSuspension     = GetVehicleMod(vehicle, 15),
+		modArmor          = GetVehicleMod(vehicle, 16),
+
+		modTurbo          = IsToggleModOn(vehicle, 18),
+		modSmokeEnabled   = IsToggleModOn(vehicle, 20),
+		modXenon          = IsToggleModOn(vehicle, 22),
+
+		modFrontWheels    = GetVehicleMod(vehicle, 23),
+		modBackWheels     = GetVehicleMod(vehicle, 24),
+
+		modCustomWheels	  =	GetVehicleModVariation(vehicle, 23),
+
+		modPlateHolder    = GetVehicleMod(vehicle, 25),
+		modVanityPlate    = GetVehicleMod(vehicle, 26),
+		modTrimA          = GetVehicleMod(vehicle, 27),
+		modOrnaments      = GetVehicleMod(vehicle, 28),
+		modDashboard      = GetVehicleMod(vehicle, 29),
+		modDial           = GetVehicleMod(vehicle, 30),
+		modDoorSpeaker    = GetVehicleMod(vehicle, 31),
+		modSeats          = GetVehicleMod(vehicle, 32),
+		modSteeringWheel  = GetVehicleMod(vehicle, 33),
+		modShifterLeavers = GetVehicleMod(vehicle, 34),
+		modAPlate         = GetVehicleMod(vehicle, 35),
+		modSpeakers       = GetVehicleMod(vehicle, 36),
+		modTrunk          = GetVehicleMod(vehicle, 37),
+		modHydrolic       = GetVehicleMod(vehicle, 38),
+		modEngineBlock    = GetVehicleMod(vehicle, 39),
+		modAirFilter      = GetVehicleMod(vehicle, 40),
+		modStruts         = GetVehicleMod(vehicle, 41),
+		modArchCover      = GetVehicleMod(vehicle, 42),
+		modAerials        = GetVehicleMod(vehicle, 43),
+		modTrimB          = GetVehicleMod(vehicle, 44),
+		modTank           = GetVehicleMod(vehicle, 45),
+		modWindows        = GetVehicleMod(vehicle, 46),
+		modLivery         = GetVehicleLivery(vehicle),
+		modDriftkit		  = driftKit,
+		condition = condition
+	}
+	
+	return vehState
+end
+
+function GetExtraCarDamage(vehicle)
+	local condition = {
+		windows = {},
+		tyres = {},
+		doors = {}
+	}
+	local status, windows = pcall(GetVehicleWindowStatus,vehicle)
+	if(status == true)then
+		condition.windows = windows
+	else
+		print("[Controlled ERROR][GetVehicleWindowStatus]:" .. windows)
+	end
+	local status, tyres = pcall(GetVehicleTyreStatus,vehicle)
+	if(status == true)then
+		condition.tyres = tyres
+	else
+		print("[Controlled ERROR][GetVehicleTyreStatus]:" .. tyres)
+	end
+	local status, doors = pcall(GetVehicleDoorStatus,vehicle)
+	if(status == true)then
+		condition.doors = doors
+	else
+		print("[Controlled ERROR][GetVehicleDoorStatus]:" .. doors)
+	end
+
+	print(json.encode(condition))
+	return condition
+end
+function GetVehicleWindowStatus(vehicle)
+	local windows = {}
+	if(AreAllVehicleWindowsIntact(vehicle) == false)then
+		for i = 0, 13 do
+			res = IsVehicleWindowIntact(vehicle, i);
+			if res ~= nil then
+				windows[tostring(i)] = res;
+			else
+				windows[tostring(i)] = true;
 			end
 		end
-
-		return {
-			model             = GetEntityModel(vehicle),
-
-			plate             = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
-			plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
-
-			bodyHealth        = ESX.Math.Round(GetVehicleBodyHealth(vehicle), 1),
-			engineHealth      = ESX.Math.Round(GetVehicleEngineHealth(vehicle), 1),
-			tankHealth        = ESX.Math.Round(GetVehiclePetrolTankHealth(vehicle), 1),
-
-			fuelLevel         = ESX.Math.Round(GetVehicleFuelLevel(vehicle), 1),
-			dirtLevel         = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
-			color1            = colorPrimary,
-			color2            = colorSecondary,
-
-			pearlescentColor  = pearlescentColor,
-			wheelColor        = wheelColor,
-
-			wheels            = GetVehicleWheelType(vehicle),
-			windowTint        = GetVehicleWindowTint(vehicle),
-			xenonColor        = GetVehicleXenonLightsColour(vehicle),
-
-			neonEnabled       = {
-				IsVehicleNeonLightEnabled(vehicle, 0),
-				IsVehicleNeonLightEnabled(vehicle, 1),
-				IsVehicleNeonLightEnabled(vehicle, 2),
-				IsVehicleNeonLightEnabled(vehicle, 3)
-			},
-
-			neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
-			extras            = extras,
-			tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
-
-			modSpoilers       = GetVehicleMod(vehicle, 0),
-			modFrontBumper    = GetVehicleMod(vehicle, 1),
-			modRearBumper     = GetVehicleMod(vehicle, 2),
-			modSideSkirt      = GetVehicleMod(vehicle, 3),
-			modExhaust        = GetVehicleMod(vehicle, 4),
-			modFrame          = GetVehicleMod(vehicle, 5),
-			modGrille         = GetVehicleMod(vehicle, 6),
-			modHood           = GetVehicleMod(vehicle, 7),
-			modFender         = GetVehicleMod(vehicle, 8),
-			modRightFender    = GetVehicleMod(vehicle, 9),
-			modRoof           = GetVehicleMod(vehicle, 10),
-
-			modEngine         = GetVehicleMod(vehicle, 11),
-			modBrakes         = GetVehicleMod(vehicle, 12),
-			modTransmission   = GetVehicleMod(vehicle, 13),
-			modHorns          = GetVehicleMod(vehicle, 14),
-			modSuspension     = GetVehicleMod(vehicle, 15),
-			modArmor          = GetVehicleMod(vehicle, 16),
-
-			modTurbo          = IsToggleModOn(vehicle, 18),
-			modSmokeEnabled   = IsToggleModOn(vehicle, 20),
-			modXenon          = IsToggleModOn(vehicle, 22),
-
-			modFrontWheels    = GetVehicleMod(vehicle, 23),
-			modBackWheels     = GetVehicleMod(vehicle, 24),
-
-			modPlateHolder    = GetVehicleMod(vehicle, 25),
-			modVanityPlate    = GetVehicleMod(vehicle, 26),
-			modTrimA          = GetVehicleMod(vehicle, 27),
-			modOrnaments      = GetVehicleMod(vehicle, 28),
-			modDashboard      = GetVehicleMod(vehicle, 29),
-			modDial           = GetVehicleMod(vehicle, 30),
-			modDoorSpeaker    = GetVehicleMod(vehicle, 31),
-			modSeats          = GetVehicleMod(vehicle, 32),
-			modSteeringWheel  = GetVehicleMod(vehicle, 33),
-			modShifterLeavers = GetVehicleMod(vehicle, 34),
-			modAPlate         = GetVehicleMod(vehicle, 35),
-			modSpeakers       = GetVehicleMod(vehicle, 36),
-			modTrunk          = GetVehicleMod(vehicle, 37),
-			modHydrolic       = GetVehicleMod(vehicle, 38),
-			modEngineBlock    = GetVehicleMod(vehicle, 39),
-			modAirFilter      = GetVehicleMod(vehicle, 40),
-			modStruts         = GetVehicleMod(vehicle, 41),
-			modArchCover      = GetVehicleMod(vehicle, 42),
-			modAerials        = GetVehicleMod(vehicle, 43),
-			modTrimB          = GetVehicleMod(vehicle, 44),
-			modTank           = GetVehicleMod(vehicle, 45),
-			modWindows        = GetVehicleMod(vehicle, 46),
-			modLivery         = GetVehicleLivery(vehicle)
-		}
-	else
-		return
 	end
+	return windows
+end
+function GetVehicleTyreStatus(vehicle)
+	local tyres = {}
+	local tyreIndex = {
+		["wheel_lf"] = 0,
+		["wheel_rf"] = 1,
+		["wheel_lm1"] = 2,
+		["wheel_rm1"] = 3,
+		["wheel_lm2"] = 45,
+		["wheel_rm2"] = 47,
+		["wheel_lm3"] = 46,
+		["wheel_rm3"] = 48,
+		["wheel_lr"] = 4,
+		["wheel_rr"] = 5,
+	}
+	for k, v in pairs(tyreIndex) do
+		local tyre_state = 2 -- 2: fine, 1: burst, 0: completely burst
+		if IsVehicleTyreBurst(vehicle, v, true) then
+			tyres[tostring(v)] = 0
+		elseif IsVehicleTyreBurst(vehicle, v, false) then
+			tyres[tostring(v)] = 1
+		else
+			tyres[tostring(v)] = 2
+		end
+	end
+	return tyres
+end
+function GetVehicleDoorStatus(vehicle)
+	local doors = {}
+	for i=0,5 do
+		doors[tostring(i)] = not IsVehicleDoorDamaged(vehicle, i)
+	end
+	return doors
 end
 
 ESX.Game.SetVehicleProperties = function(vehicle, props)
@@ -1024,4 +1134,19 @@ Citizen.CreateThread(function()
 		end
 		Citizen.Wait(sleep)
 	end
+end)
+
+function loadAnimDict(dict)
+    while not HasAnimDictLoaded(dict) do
+        RequestAnimDict(dict)
+        
+        Citizen.Wait(1)
+    end
+end
+
+RegisterNetEvent('esx:giveAnimation')
+AddEventHandler('esx:giveAnimation', function()
+       local playerPed = PlayerPedId()
+       loadAnimDict('mp_common')
+       TaskPlayAnim(playerPed, "mp_common", "givetake1_a", 8.0, 8.0, 20, 50, 0, false, false, false)
 end)
