@@ -5,23 +5,21 @@ Config.PlayerText = "Jugadores" -- Player text. Example Players 10/32
 Config.ResourceTimer = 10 -- Time in witch resource updates in seconds
 Config.UseESXIdentity = true -- Uses ESX Identity name not steam name
 
-
-cfg = {}
 --This is where you put your DiscordAppID you can get it from here https://discord.com/developers/applications
-cfg.DiscordAppID = 771833265560485900 
+Config.DiscordAppID = 771833265560485900 
 
-cfg.discordImageName = 'gltich'
-cfg.hoverText = 'Leyendas RP v2'
-cfg.richPresenceText = 'Jugando a Leyendas RP'
-cfg.smallDiscordImageName = 'logo'
-cfg.smallHoverText = 'discord.gg/wwbxcC8Qp4'
+Config.discordImageName = 'gltich'
+Config.hoverText = 'Leyendas RP v2'
+Config.richPresenceText = 'Jugando a Leyendas RP'
+Config.smallDiscordImageName = 'logo'
+Config.smallHoverText = 'discord.gg/wwbxcC8Qp4'
 
-cfg.button1 = {
+Config.button1 = {
     text = 'Discord',
     url = 'discord.gg/wwbxcC8Qp4'
 }
 
-cfg.button2 = {
+Config.button2 = {
     text = 'Web',
     url = 'https://leyendasrp.es'
 }

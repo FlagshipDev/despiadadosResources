@@ -75,16 +75,16 @@ end)]]--
 
 
 
-SetDiscordAppId(cfg.DiscordAppID)
+SetDiscordAppId(Config.DiscordAppID)
 
 Citizen.CreateThread(function()
 	Wait(2000)
 	TriggerServerEvent(('discord:server:setName'))
-	SetDiscordRichPresenceAsset(cfg.discordImageName) 
-	SetDiscordRichPresenceAssetText(cfg.hoverText) 
-	SetDiscordRichPresenceAssetSmall(cfg.smallDiscordImageName) -- Name of the smaller image asset.
-	SetDiscordRichPresenceAssetSmallText(cfg.smallHoverText)
---	SetRichPresence(cfg.richPresenceText) 
+	SetDiscordRichPresenceAsset(Config.discordImageName) 
+	SetDiscordRichPresenceAssetText(Config.hoverText) 
+	SetDiscordRichPresenceAssetSmall(Config.smallDiscordImageName) -- Name of the smaller image asset.
+	SetDiscordRichPresenceAssetSmallText(Config.smallHoverText)
+--	SetRichPresence(Config.richPresenceText) 
 SetRichPresence('ID:' .. GetPlayerServerId(NetworkGetEntityOwner(GetPlayerPed(-1))) .. ' | ' .. GetPlayerName(PlayerId()) .. ' | ' ..' '.. Config.PlayerText ..' ' .. #GetActivePlayers() .. '/' .. tostring(Config.PlayerCount))
 	SetDiscordRichPresenceAction(0, 'Web', 'https://leyendasrp.es')
 	SetDiscordRichPresenceAction(1, 'Discord', 'https://discord.gg/wwbxcC8Qp4')
