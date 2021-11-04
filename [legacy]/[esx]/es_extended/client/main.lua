@@ -338,28 +338,20 @@ Citizen.CreateThread(function()
 
 		for k,v in pairs(pickups) do
 			local distance = GetDistanceBetweenCoords(coords, v.coords.x, v.coords.y, v.coords.z, true)
-			local closestPlayer, closestDistance = FSX.Game.GetClosestPlayer()
+			local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
 
 			if distance <= 2.0 then
-				FSX.ShowFloatingHelpNotification("Presiona ~y~E~s~ para recoger ~w~"..v.label.."~s~", vector3(v.coords.x, v.coords.y, v.coords.z + 0.5))
-				--FSX.Game.Utils.DrawText3D({
-				--	x = v.coords.x,
-				--	y = v.coords.y,
-				--	z = v.coords.z + 0.25
-				--}, v.label)
+				ESX.ShowFloatingHelpNotification("Presiona ~y~E~s~ para recoger ~w~"..v.label.."~s~", vector3(v.coords.x, v.coords.y, v.coords.z + 0.5))
 			end
 
 			if (closestDistance == -1 or closestDistance > 3) and distance <= 1.0 and not v.inRange and IsPedOnFoot(playerPed) and  IsControlJustReleased(0, 38) then
 				local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
-				FSX.Streaming.RequestAnimDict(dict)
+				ESX.Streaming.RequestAnimDict(dict)
 				TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
 				Citizen.Wait(1000)
-				TriggerServerEvent('fsx:onPickup', v.id)
+				TriggerServerEvent('esx:onPickup', v.id)
 				PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
 				v.inRange = true
-				--	TriggerServerEvent('fsx:onPickup', v.id)
-			--	PlaySoundFrontend(-1, 'PICK_UP', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
-			--	v.inRange = true
 			end
 		end
 	end
