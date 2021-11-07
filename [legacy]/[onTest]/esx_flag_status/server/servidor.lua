@@ -4,7 +4,7 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 local nivelDefcon = 0
 
-AddEventHandler('onResourceStart', function(resourceName)
+--[[AddEventHandler('onResourceStart', function(resourceName)
 	if (GetCurrentResourceName() ~= resourceName) then
 	  return
 	end
@@ -15,7 +15,7 @@ AddEventHandler('onResourceStart', function(resourceName)
 	print('[^4FlagOptimizacion^0] Se han borrado los usuarios mal creados.')
 	MySQL.Async.execute('DELETE FROM user_inventory WHERE count = 0')
 	print('[^4FlagOptimizacion^0] Se han borrado items del inventario con cantidad = 0.')
-end)
+end)]]--
   
 
 RegisterNetEvent('setDefconAllPlayers')
