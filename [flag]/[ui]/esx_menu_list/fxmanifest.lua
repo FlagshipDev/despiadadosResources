@@ -1,10 +1,15 @@
-resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
+fx_version 'adamant'
 
-description 'MSX Menu Dialog'
+game 'gta5'
 
-version '1.1.0'
+description 'MSX Menu List'
 
-client_script 'client/main.lua'
+version '1.0.2'
+
+client_scripts {
+	'@es_extended/client/wrapper.lua',
+	'client/main.lua'
+}
 
 ui_page 'html/ui.html'
 
