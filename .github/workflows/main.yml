@@ -15,4 +15,5 @@ jobs:
         port: 22
         script: |
           cd /root/FiveM/server/txData/PlumeESXLegacy_7C9EBA.base/resources
+          rm -r /root/FiveM/server/txData/PlumeESXLegacy_7C9EBA.base/cache
           git pull https://${{secrets.TOKEN}}@github.com/FlagshipDev/despiadadosResources.git
