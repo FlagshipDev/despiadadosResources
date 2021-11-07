@@ -2,7 +2,7 @@
 --  GNU AFFERO GENERAL PUBLIC LICENSE  --
 --     Version 3, 19 November 2007     --
 
-fx_version 'bodacious'
+fx_version 'adamant'
 games { 'gta5' }
 
 description 'EssentialMode by Kanersps.'
