@@ -131,7 +131,7 @@ function KartingMenu()
                 _vip = esvip
             end)
             if not _vip then
-                exports.fl_notifications:MoleShowAdvancedNotification('~p~LeyendasRP', 'No eres ~y~VIP~s~', 'Para poder utilizar esto tienes que ser VIP.', 'CHAR_BLOCKED', 1)
+                exports.fl_notifications:FlagShowAdvancedNotification('~p~LeyendasRP', 'No eres ~y~VIP~s~', 'Para poder utilizar esto tienes que ser VIP.', 'CHAR_BLOCKED', 1)
             else 
                 VehicleLoadTimer('veto2')
                 posEntrega = Config.Actividades.SpawnZonesKarts[math.random(1, #Config.Actividades.SpawnZonesKarts)]
@@ -337,7 +337,7 @@ function OpenMotoaguaMenu1()
                 _vip = esvip
             end)
             if not _vip then
-                exports.fl_notifications:MoleShowAdvancedNotification('~p~LeyendasRP', 'No eres ~y~VIP~s~', 'Para poder utilizar esto tienes que ser VIP.', 'CHAR_BLOCKED', 1)
+                exports.fl_notifications:FlagShowAdvancedNotification('~p~LeyendasRP', 'No eres ~y~VIP~s~', 'Para poder utilizar esto tienes que ser VIP.', 'CHAR_BLOCKED', 1)
             else 
                 VehicleLoadTimer('seashark3')
             --    posEntrega = Config.Actividades.SpawnZonesMotoagua1
